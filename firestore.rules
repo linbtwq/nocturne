@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function owns(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+    function lengthWithin(value, maximum) {
+      return value is string && value.size() > 0 && value.size() <= maximum;
+    }
+    function validScore(value) {
+      return value == null || (value is number && value >= 1 && value <= 10);
+    }
+    function validDetails(details) {
+      return details is map
+        && details.keys().hasOnly(['text', 'form', 'style', 'voice', 'mood'])
+        && validScore(details.get('text', null))
+        && validScore(details.get('form', null))
+        && validScore(details.get('style', null))
+        && validScore(details.get('voice', null))
+        && validScore(details.get('mood', null));
+    }
+    function validLink(value) {
+      return value is string && value.size() <= 1000
+        && (value == '' || value.matches('^https://.+$'));
+    }
+    function validImport(data) {
+      return data.keys().hasAll(['provider','sourceId','trackOrder','cover','sourceUrl','duration'])
+        && data.provider in ['musicbrainz','apple','deezer','audius']
+        && lengthWithin(data.sourceId, 120)
+        && data.trackOrder is int && data.trackOrder >= 0
+        && validLink(data.cover) && validLink(data.sourceUrl)
+        && (data.duration == null || (data.duration is int && data.duration > 0));
+    }
+    match /profiles/{uid} {
+      allow read: if signedIn();
+      allow create, update: if owns(uid)
+        && request.resource.data.keys().hasOnly(['name', 'following', 'collection'])
+        && lengthWithin(request.resource.data.name, 40)
+        && request.resource.data.get('following', []) is list
+        && request.resource.data.get('collection', []) is list;
+    }
+    match /releases/{releaseId} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['id', 'kind', 'title', 'artist', 'genre', 'year', 'album', 'addedBy', 'createdAt', 'provider', 'sourceId', 'trackOrder', 'duration', 'cover', 'sourceUrl'])
+        && (!request.resource.data.keys().hasAny(['provider','sourceId','trackOrder','cover','sourceUrl','duration'])
+          || validImport(request.resource.data))
+        && request.resource.data.addedBy == request.auth.uid
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.id is string
+        && request.resource.data.id.matches('^[1-9][0-9]{0,14}$')
+        && request.resource.data.id == releaseId
+        && request.resource.data.kind in ['album', 'track']
+        && lengthWithin(request.resource.data.title, 100)
+        && lengthWithin(request.resource.data.artist, 100)
+        && lengthWithin(request.resource.data.genre, 50)
+        && ((request.resource.data.year is int
+          && request.resource.data.year >= 1850 && request.resource.data.year <= 2100)
+          || (request.resource.data.year == null && validImport(request.resource.data)))
+        && request.resource.data.album is string
+        && (request.resource.data.album == '0' || (
+          request.resource.data.kind == 'track'
+          && getAfter(/databases/$(database)/documents/releases/$(request.resource.data.album)).data.kind == 'album'
+        ));
+    }
+    match /ratings/{ratingId} {
+      allow read: if signedIn();
+      allow create, update: if owns(request.resource.data.uid)
+        && request.resource.data.keys().hasOnly(['uid', 'releaseId', 'total', 'details', 'review', 'updatedAt'])
+        && request.resource.data.releaseId is string
+        && ratingId == request.auth.uid + '_' + request.resource.data.releaseId
+        && exists(/databases/$(database)/documents/releases/$(request.resource.data.releaseId))
+        && validScore(request.resource.data.total)
+        && validDetails(request.resource.data.details)
+        && request.resource.data.review is string && request.resource.data.review.size() <= 12000
+        && request.resource.data.updatedAt == request.time;
+    }
+  }
+}
+

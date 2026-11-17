@@ -1,0 +1,150 @@
+.music-home { display: grid; gap: 28px; }
+.browse-head { display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+.browse-head h1 { font-size: clamp(33px, 5vw, 57px); margin: 0; }
+.browse-search { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; width: min(470px, 100%); }
+.browse-search input { width: 100%; min-width: 0; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.home-columns { display: grid; grid-template-columns: minmax(0, 2.5fr) minmax(260px, 1fr); align-items: start; gap: 24px; }
+.home-columns > * { min-width: 0; }
+.feed-shelf { margin-bottom: 26px; }
+.feed-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 12px; padding-bottom: 12px; }
+.feed-heading h2 { font-size: clamp(20px, 2.5vw, 28px); }
+.feed-heading > span,.feed-heading > a { font-size: 12px; color: var(--muted); }
+.feed-heading > a:hover { color: var(--mint); }
+.feed-grid { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 10px; }
+.feed-card { display: grid; align-content: start; gap: 2px; min-width: 0; overflow: hidden; padding: 6px 6px 8px; background: #252c29; border: 1px solid var(--line); border-radius: 8px; }
+.feed-card:hover,.feed-ranking a:hover { border-color: var(--mint); background: #2d3832; }
+.feed-card strong,.feed-card > span,.feed-ranking strong,.feed-ranking small { display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.feed-card strong { font-size: 13px; margin-top: 4px; }
+.feed-card > span { font-size: 12px; color: var(--muted); }
+.feed-art { position: relative; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; border-radius: 5px; background: linear-gradient(145deg,#424857,#3a5250 62%,#66505f); color: #e1e8ee; }
+.feed-art span { font-weight: 800; font-size: clamp(15px, 2vw, 27px); }
+.feed-art img,.cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.feed-art img { position: absolute; inset: 0; }
+.cover { overflow: hidden; }
+.feed-ranking { list-style: none; margin: 0; padding: 0; overflow: hidden; border: 1px solid var(--line); background: var(--panel); border-radius: 10px; }
+.feed-ranking li + li { border-top: 1px solid var(--line); }
+.feed-ranking a { display: grid; grid-template-columns: 25px 38px minmax(0,1fr); gap: 9px; padding: 7px 9px; align-items: center; }
+.feed-ranking .rank { color: var(--mint); text-align: center; font: 600 11px ui-monospace,monospace; }
+.feed-ranking strong { font-size: 13px; }
+.feed-ranking small { font-size: 12px; }
+.feed-empty,.feed-loading { border: 1px solid var(--line); background: var(--panel); border-radius: 9px; padding: 14px; }
+.feed-empty a,.back-link { color: var(--mint); }
+.feed-empty button { margin-top: 8px; }
+.back-link { display: inline-block; margin-bottom: 14px; }
+.external-release { margin-bottom: 16px; }
+.import-tracks { list-style: none; margin: 10px 0; padding: 0; }
+.import-tracks li { display: flex; justify-content: space-between; gap: 10px; padding-block: 6px; border-bottom: 1px solid var(--line); }
+@media(max-width: 1050px) {
+  .feed-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+}
+@media(max-width: 760px) {
+  .home-columns { grid-template-columns: 1fr; }
+  .browse-head { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .browse-search { width: 100%; }
+  .music-home { gap: 20px; }
+}
+.review-heading { display: flex; align-items: start; justify-content: space-between; gap: 8px; }
+.review-score { color: var(--mint); font-size: 17px; font-weight: 800; }
+
+/* Frosted glass over the cloudscape */
+:root {
+  color-scheme: light;
+  --bg: #e7f2ff;
+  --panel: #f7f9ffb8;
+  --line: #4b5f8c30;
+  --paper: #14254a;
+  --muted: #435678;
+  --mint: #17468e;
+  --acid: #17468e;
+  --steel: #668abf;
+  --lavender: #b8a8d4;
+  --mauve: #aa3158;
+  --gunmetal: #6386af;
+}
+html { min-height: 100%; }
+body {
+  background: linear-gradient(145deg,#2678c7 0%,#a9cbe7 45%,#822452 100%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(112deg,#cce5ff10,#14285326),url('../../assets/cloudscape.png') center 43%/cover no-repeat;
+  pointer-events: none;
+}
+.site-header {
+  background: #eaf5ffd4;
+  border-color: #ffffffc9;
+  backdrop-filter: blur(22px) saturate(1.25);
+}
+.header-inner { min-height: 67px; }
+nav a[aria-current="page"], .profile-link:hover { color: #3449a6; }
+.profile-link { background: #ffffff6e; }
+.site-footer { margin-block: 15px; background: #f5f6ffd1; border: 1px solid #ffffffbc; border-radius: 16px; padding: 12px 18px; }
+main { min-height: 72vh; padding-block: 24px 36px; }
+button,input,textarea,select,.link-button {
+  color: var(--paper);
+  background: #ffffffad;
+  border-color: #7d90b755;
+  border-radius: 10px;
+}
+button:hover { border-color: #5268b3; }
+.primary,.link-button { background: #164b9b; color: white; border-color: #164b9b; }
+.primary:hover,.link-button:hover { background: #10377b; color: white; }
+dialog { background: #f1f5ff; box-shadow: 0 14px 56px #24274a45; }
+dialog::backdrop { background: #26335592; }
+.release,.poster { background: linear-gradient(125deg,#f4f8ffeb,#e5deffcc); }
+.error { color: #981c51; }
+
+.music-home {
+  gap: 19px;
+  padding: clamp(16px,2.6vw,34px);
+  border: 1px solid #ffffffce;
+  border-radius: 25px;
+  background: linear-gradient(130deg,#e9f5ffdc,#e1edfbba 58%,#f1e5f2cf);
+  backdrop-filter: blur(20px) saturate(1.15);
+  box-shadow: 0 22px 64px #112e674f, inset 0 1px 0 #ffffff7a;
+}
+.browse-head { align-items: end; margin-bottom: 5px; }
+.browse-head h1 { font-size: clamp(39px,5vw,61px); letter-spacing: -.06em; }
+.browse-search { max-width: 400px; }
+.region-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  margin-top: 9px;
+  border-radius: 11px;
+  background: #365d9a23;
+  border: 1px solid #8799d340;
+}
+.region-switch button { padding: 5px 14px; background: transparent; border-color: transparent; border-radius: 7px; font-size: 13px; font-weight: 600; }
+.region-switch button[aria-pressed="true"] { background: #f9faff; border-color: #fff; color: #a12652; box-shadow: 0 1px 5px #52649430; }
+.home-columns { gap: clamp(17px,2vw,26px); }
+.feed-shelf { margin-bottom: 20px; }
+.feed-heading h2 { color: #152853; }
+.feed-card { background: #f6f8ffc9; border-color: #fff; box-shadow: 0 4px 10px #42527c15; border-radius: 10px; }
+.feed-card:hover,.feed-ranking a:hover { background: #fff; border-color: #8294da; }
+.feed-card strong,.feed-ranking strong { color: #1d294b; }
+.feed-art { background: linear-gradient(145deg,#b1d9fa,#d6e4f8 60%,#e7bfd8); color: #3f5198; border-radius: 6px; }
+.feed-ranking,.feed-empty,.feed-loading { background: #f4f7ffd1; border-color: #ffffffc9; }
+.feed-ranking li + li { border-color: #697ca628; }
+.feed-ranking .rank { color: #9c244f; }
+.feed-grid { gap: 9px; }
+.external-release,.release-page .release { border-color: #ffffffbd; box-shadow: 0 9px 32px #40527a2b; }
+.release .cover { background: #d5e0f6; }
+@media(max-width: 760px) {
+  .browse-head { align-items: stretch; }
+  .music-home { border-radius: 18px; }
+  .home-columns { gap: 3px; }
+}
+
+@media(max-width: 760px) {
+  .home-columns > div,.home-columns > aside { display: contents; }
+  .home-columns > div > .feed-shelf { order: 2; }
+  .home-columns > div > .feed-shelf:first-child { order: 0; }
+  .home-columns > aside > .feed-shelf { order: 3; }
+  .home-columns > aside > .feed-shelf:first-child { order: 1; }
+}
